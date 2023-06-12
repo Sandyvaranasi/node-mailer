@@ -9,6 +9,8 @@ const transporter = nodemailer.createTransport({
     pass: process.env.sender_pass 
   },
 });
+
+let otp;
 //==============================================
 
 const sendMail = async (req,res)=>{
@@ -36,8 +38,10 @@ const sendMail = async (req,res)=>{
             console.error(error);
             res.status(500).send('Error sending email');
           } else {
+            otp = Math.floor(Math.random() * 10000)
+
             console.log('Email sent: ' + info.response);
-            res.send(info.response);
+            res.send({data:info.response,OTP:otp});
           }
         });
         //=======================================================
@@ -47,4 +51,24 @@ const sendMail = async (req,res)=>{
     }
 }
 
-module.exports = {sendMail}
+const otpAuth = (req,res) =>{
+  try{
+    const OTP = req.body.OTP
+
+    console.log(OTP);
+    console.log(otp);
+
+    if(OTP !== otp) return res.status(400).send({message:'invalid otp'})
+
+    // else write rest of logic
+
+    else res.status(200).send({data:'Success !!!'})
+    otp =
+    console.log("now otp" + otp);
+
+  }catch(err){
+        res.status(500).json({message:err.message})
+    }
+}
+
+module.exports = {sendMail, otpAuth}
