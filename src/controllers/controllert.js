@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 require("dotenv").config();
+const model = require('../models/model')
 
 // Transporter creation ===>
 const transporter = nodemailer.createTransport({
@@ -17,18 +18,22 @@ const sendMail = async (req,res)=>{
     try{
         const data = req.body
 
-        if(!data.email||!data.message) return res.status(400).json({message:"please give both email and message"});
+        if(!data.email||!data.fullName) return res.status(400).json({message:"please give both email and fullName"});
 
         if(typeof(data.email)!= "string"||!data.email.match(/^[\w\.-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*\.[a-zA-Z]{2,}$/i)) return res.status(400).json({message:"please give valid email"});
 
-        if(typeof(data.message)!= "string"|| data.message.trim().length==0) return res.status(400).json({message:"please give valid message"});
+        if(typeof(data.fullName)!= "string"|| data.message.trim().length==0) return res.status(400).json({message:"please give valid fullName"});
+
+        //Generating OTP ===>
+        otp = Math.floor(Math.random() * 10000)
+        //================================
 
 // Reciever and content setting ===>
         const mailOptions = {
           from: process.env.sender_mail,
           to: data.email,
-          subject: 'Hello',
-          text: data.message,
+          subject: 'Varification',
+          text: `Hello ${data.fullName} Thank You for using our service. Your OTP for this session is ${otp}`,
         };
         //========================================
       
@@ -38,10 +43,8 @@ const sendMail = async (req,res)=>{
             console.error(error);
             res.status(500).send('Error sending email');
           } else {
-            otp = Math.floor(Math.random() * 10000)
-
             console.log('Email sent: ' + info.response);
-            res.send({data:info.response,OTP:otp});
+            res.send({data:info.response});
           }
         });
         //=======================================================
@@ -51,21 +54,22 @@ const sendMail = async (req,res)=>{
     }
 }
 
-const otpAuth = (req,res) =>{
+const otpAuth = async (req,res) =>{
   try{
-    const OTP = req.body.OTP
-
-    console.log(OTP);
-    console.log(otp);
+    const {email, fullName, OTP} = req.body
 
     if(OTP !== otp) return res.status(400).send({message:'invalid otp'})
 
-    // else write rest of logic
-
-    else res.status(200).send({data:'Success !!!'})
-    otp =
-    console.log("now otp" + otp);
-
+    // DB findbymail and return id
+    const existingUser = await model.findOne(email)
+    if(existingUser){
+      otp = undefined;
+      return res.status(200).json({data:existingUser})
+    }else{
+      otp = undefined;
+      const newUser = await model.create({email:email,fullName:fullName});
+      return res.status(201).json({data:newUser});
+    }
   }catch(err){
         res.status(500).json({message:err.message})
     }
