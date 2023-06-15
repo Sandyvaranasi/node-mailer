@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, {  useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useEmailContext } from './Email';
+import axios from 'axios';
 
 export default function Otp() {
-    const { email, fullName } = useEmailContext();
   const [otpDigits, setOtpDigits] = useState(['', '', '', '']);
   const navigate = useNavigate()
 
@@ -16,7 +15,9 @@ export default function Otp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const otp = otpDigits.join('');
-    console.log(otp);
+    axios.post('http://localhost:3000/api/auth',{OTP:otp})
+    .then(()=>alert('success !!!'))
+    .catch(error=>alert(error.response.data.message))
   };
 
   const handleResend = () => {

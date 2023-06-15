@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-let otp;
+let otp, Email, FullName;
 //==============================================
 
 const sendMail = async (req,res)=>{
@@ -22,7 +22,7 @@ const sendMail = async (req,res)=>{
 
         if(typeof(data.email)!= "string"||!data.email.match(/^[\w\.-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*\.[a-zA-Z]{2,}$/i)) return res.status(400).json({message:"please give valid email"});
 
-        if(typeof(data.fullName)!= "string"|| data.message.trim().length==0) return res.status(400).json({message:"please give valid fullName"});
+        if(typeof(data.fullName)!= "string"|| data.fullName.trim().length==0) return res.status(400).json({message:"please give valid fullName"});
 
         //Generating OTP ===>
         otp = Math.floor(Math.random() * 10000)
@@ -36,6 +36,7 @@ const sendMail = async (req,res)=>{
           text: `Hello ${data.fullName} Thank You for using our service. Your OTP for this session is ${otp}`,
         };
         //========================================
+        console.log(otp);
       
         // Mail sending ===>
         transporter.sendMail(mailOptions, (error, info) => {
@@ -45,6 +46,8 @@ const sendMail = async (req,res)=>{
           } else {
             console.log('Email sent: ' + info.response);
             res.send({data:info.response});
+            Email = data.email;
+            FullName = data.fullName;
           }
         });
         //=======================================================
@@ -56,18 +59,24 @@ const sendMail = async (req,res)=>{
 
 const otpAuth = async (req,res) =>{
   try{
-    const {email, fullName, OTP} = req.body
+    const  OTP = req.body.OTP
+
+    console.log(OTP,otp);
 
     if(OTP !== otp) return res.status(400).send({message:'invalid otp'})
 
     // DB findbymail and return id
-    const existingUser = await model.findOne(email)
+    const existingUser = await model.findOne(Email)
     if(existingUser){
       otp = undefined;
+      Email = undefined;
+      FullName = undefined;
       return res.status(200).json({data:existingUser})
     }else{
       otp = undefined;
-      const newUser = await model.create({email:email,fullName:fullName});
+      const newUser = await model.create({email:Email,fullName:FullName});
+      Email = undefined;
+      FullName = undefined;
       return res.status(201).json({data:newUser});
     }
   }catch(err){
