@@ -16,7 +16,7 @@ export default function Otp() {
     e.preventDefault();
     const otp = otpDigits.join('');
     axios.post('http://localhost:3000/api/auth',{OTP:otp})
-    .then(()=>alert('success !!!'))
+    .then(()=>navigate('/hurrah'))
     .catch(error=>alert(error.response.data.message))
   };
 

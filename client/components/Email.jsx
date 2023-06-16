@@ -12,9 +12,10 @@ export default function Email() {
     if (!validateEmail(email) || !validateName(fullName)) {
       alert('Please enter a valid email and name');
     } else {
-      axios.post('http://localhost:3000/api/sendMail',{email,fullName})
-      .then(()=>navigate('/otp'))
-      .catch(error=>alert(error.response.data.message))
+      axios
+        .post('http://localhost:3000/api/sendMail', { email, fullName })
+        .then(() => navigate('/otp'))
+        .catch((error) => alert(error.response.data.message));
     }
   };
 
@@ -37,27 +38,30 @@ export default function Email() {
   };
 
   return (
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          className="email-input"
-          onChange={handleEmail}
-          required
-        />
-        <br />
-        <input
-          type="text"
-          placeholder="Full Name"
-          className="email-input"
-          value={fullName}
-          onChange={handleFullName}
-          required
-        />
-        <br />
-        <button type="submit" className="submit-button">
-          Submit
-        </button>
-      </form>
+    <div className="container">
+      <div className="content">
+        <img src={'https://png.pngtree.com/png-vector/20191003/ourmid/pngtree-user-login-or-authenticate-icon-on-gray-background-flat-icon-ve-png-image_1786166.jpg'} alt="Log in Logo" className="logo" />
+        <form onSubmit={handleSubmit} className="form">
+          <input
+            type="email"
+            placeholder="Email"
+            className="email-input"
+            onChange={handleEmail}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="email-input"
+            value={fullName}
+            onChange={handleFullName}
+            required
+          />
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

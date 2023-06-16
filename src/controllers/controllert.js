@@ -32,7 +32,7 @@ const sendMail = async (req,res)=>{
         const mailOptions = {
           from: process.env.sender_mail,
           to: data.email,
-          subject: 'Varification',
+          subject: 'Verification',
           text: `Hello ${data.fullName} Thank You for using our service. Your OTP for this session is ${otp}`,
         };
         //========================================
@@ -63,10 +63,10 @@ const otpAuth = async (req,res) =>{
 
     console.log(OTP,otp);
 
-    if(OTP !== otp) return res.status(400).send({message:'invalid otp'})
+    if(OTP != otp) return res.status(400).send({message:'invalid otp'})
 
     // DB findbymail and return id
-    const existingUser = await model.findOne(Email)
+    const existingUser = await model.findOne({email:Email})
     if(existingUser){
       otp = undefined;
       Email = undefined;
