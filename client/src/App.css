@@ -1,70 +1,70 @@
-.email-form {
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 95vh;
+  background-image: url('https://e1.pxfuel.com/desktop-wallpaper/407/1022/desktop-wallpaper-website-backgrounds-login-page.jpg'); /* Replace with your background image */
+  background-size: cover;
+  backdrop-filter: blur(10px); /* Apply blur effect */
+}
+
+.content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8); /* Adjust the opacity as desired */
+  padding:40px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.5s;
+}
+
+
+.logo {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .email-input {
   width: 300px;
   padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 16px;
 }
 
 .submit-button {
   padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
+  background-color: #405de6;
+  color: #ffffff;
   border: none;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #6a67ce;
 }
 
-.otp-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.animation {
+  width: 200px;
   margin-top: 20px;
 }
 
-.otp-input {
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  margin: 0 5px;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.button {
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  margin-right: 10px;
-  transition: background-color 0.3s ease;
-}
-
-.button:hover {
-  background-color: #0056b3;
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
